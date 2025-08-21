@@ -14,5 +14,7 @@ djangorestframework==3.16.1
     # via -r requirements.in
 psycopg2-binary==2.9.10
     # via -r requirements.in
+python-dotenv==1.1.1
+    # via -r requirements.in
 sqlparse==0.5.3
     # via django
