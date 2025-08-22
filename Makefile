@@ -4,7 +4,16 @@ build:
 
 # Docker compose run command
 run:
-	docker compose up -d 
+	docker compose up -d
+
+# Docker backend logs
+logs:
+	docker compose logs --since=1h api
+
+rebuild:
+	docker compose down --volumes --remove-orphans
+	docker compose build --no-cache
+	docker compose up -d
 
 # Docker compose stop command
 stop:

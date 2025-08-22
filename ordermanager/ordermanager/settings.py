@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+from dotenv import load_dotenv
 from pathlib import Path
+import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,14 +23,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-	'django-insecure-#^o_+6=jcl+jmkxshf3y@xcl)ixscfm8mzr5uqlyem2p0-3cru'
-)
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+for_debug = False 
+if (os.environ.get('DEBUG') == 'True'):
+    for_debug = True
 
-ALLOWED_HOSTS = []
+DEBUG = for_debug
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -75,10 +80,14 @@ WSGI_APPLICATION = 'ordermanager.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': BASE_DIR / 'db.sqlite3',
-	}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',  
+        'NAME': os.environ.get('DB_NAME'),                 
+        'USER': os.environ.get('DB_USER'),                   
+        'PASSWORD': os.environ.get('DB_PASSWORD'),              
+        'HOST': os.environ.get('DB_HOST'),               
+        'PORT': os.environ.get('DB_PORT'),
+    }
 }
 
 
