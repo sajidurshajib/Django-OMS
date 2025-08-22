@@ -4,7 +4,7 @@
 cd ordermanager
 
 # Run migrations
-# python manage.py migrate --noinput
+python manage.py migrate --noinput
 
 # Collect static files (optional, for production)
 # python manage.py collectstatic --noinput
