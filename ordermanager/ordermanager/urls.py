@@ -17,13 +17,20 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
-from .swagger import schema_view
 
+from .swagger import schema_view
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
-    path('user/', include('user.urls')),
-    path('variant/', include('variant.urls')),
-    path('drf-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+	path('user/', include('user.urls')),
+	path('variant/', include('variant.urls')),
+	path('order/', include('order.urls')),
+	path(
+		'drf-auth/', include('rest_framework.urls', namespace='rest_framework')
+	),
+	path(
+		'docs/',
+		schema_view.with_ui('swagger', cache_timeout=0),
+		name='schema-swagger-ui',
+	),
 ]

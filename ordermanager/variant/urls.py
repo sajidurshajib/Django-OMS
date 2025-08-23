@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import variant_create, variant_update, variant_delete
+
+from .views import variant_create, variant_delete, variant_update
 
 urlpatterns = [
 	path('create/', variant_create, name='variant-create'),
