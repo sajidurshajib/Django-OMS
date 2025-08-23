@@ -59,17 +59,6 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
 		)
 
 
-class OrderItemUpdateSerializer(serializers.ModelSerializer):
-	quantity = serializers.IntegerField(required=False)
-
-	class Meta:
-		model = OrderItem
-		fields = ['variant', 'quantity']
-		extra_kwargs = {
-			'variant': {'required': False},
-		}
-
-
 # Order serializers
 class OrderCreateSerializer(serializers.ModelSerializer):
 	items = OrderItemCreateSerializer(many=True)
@@ -86,35 +75,3 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 			item_data['order'] = order
 			OrderItemCreateSerializer().create(item_data)
 		return order
-
-
-class OrderUpdateSerializer(serializers.ModelSerializer):
-	items = OrderItemUpdateSerializer(many=True, required=False)
-
-	class Meta:
-		model = Order
-		fields = ['customer', 'items']
-		extra_kwargs = {
-			'customer': {'required': False},
-		}
-
-	def update(self, instance, validated_data):
-		items_data = validated_data.pop('items', None)
-		if 'customer' in validated_data:
-			instance.customer = validated_data['customer']
-			instance.save()
-		if items_data is not None:
-			pass
-		return instance
-
-
-class OrderDeleteSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Order
-		fields = ['id']
-
-
-class OrderItemDeleteSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = OrderItem
-		fields = ['id']
