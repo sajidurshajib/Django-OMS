@@ -6,6 +6,10 @@ build:
 run:
 	docker compose up -d
 
+# Docker restart command
+restart:
+	docker compose restart
+	
 # Docker backend logs
 logs:
 	docker compose logs --since=1h api
