@@ -15,6 +15,10 @@ rebuild:
 	docker compose build --no-cache
 	docker compose up -d
 
+# Run container shell
+shell:
+	docker compose exec api bash
+
 # Docker compose stop command
 stop:
 	docker compose down
