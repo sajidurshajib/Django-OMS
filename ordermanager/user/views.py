@@ -1,4 +1,4 @@
-from django.contrib.auth import logout
+from django.contrib.auth import get_user_model, logout
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status
 from rest_framework.authentication import SessionAuthentication
@@ -14,6 +14,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from user.models import CustomerProfile
+
 from .serializers import (
 	PasswordUpdateSerializer,
 	RegisterSerializer,
@@ -21,8 +23,6 @@ from .serializers import (
 	UserUpdateSerializer,
 )
 
-from user.models import CustomerProfile
-from django.contrib.auth import get_user_model
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 	@classmethod
@@ -120,14 +120,11 @@ def password_update(request):
 	return Response({'detail': 'Password updated successfully.'})
 
 
-
-
-
 @swagger_auto_schema(
 	method='get',
 	tags=['customer_report'],
 	operation_id='customer_report',
-	responses={200: 'Returns total_spent for the customer.'}
+	responses={200: 'Returns total_spent for the customer.'},
 )
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -140,6 +137,11 @@ def customer_report(request, id):
 		return Response({'detail': 'Customer not found.'}, status=404)
 	# Only allow the user themselves or a superuser to view
 	if not (request.user.is_superuser or request.user.pk == user.pk):
-		return Response({'detail': 'You do not have permission to view this report.'}, status=403)
+		return Response(
+			{'detail': 'You do not have permission to view this report.'},
+			status=403,
+		)
 	profile, _ = CustomerProfile.objects.get_or_create(user=user)
-	return Response({'customer_id': user.pk, 'total_spent': profile.total_spent})
+	return Response(
+		{'customer_id': user.pk, 'total_spent': profile.total_spent}
+	)
