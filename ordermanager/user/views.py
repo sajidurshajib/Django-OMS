@@ -21,6 +21,8 @@ from .serializers import (
 	UserUpdateSerializer,
 )
 
+from user.models import CustomerProfile
+from django.contrib.auth import get_user_model
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 	@classmethod
@@ -116,3 +118,28 @@ def password_update(request):
 	serializer.is_valid(raise_exception=True)
 	serializer.save()
 	return Response({'detail': 'Password updated successfully.'})
+
+
+
+
+
+@swagger_auto_schema(
+	method='get',
+	tags=['customer_report'],
+	operation_id='customer_report',
+	responses={200: 'Returns total_spent for the customer.'}
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+def customer_report(request, id):
+	User = get_user_model()
+	try:
+		user = User.objects.get(pk=id)
+	except User.DoesNotExist:
+		return Response({'detail': 'Customer not found.'}, status=404)
+	# Only allow the user themselves or a superuser to view
+	if not (request.user.is_superuser or request.user.pk == user.pk):
+		return Response({'detail': 'You do not have permission to view this report.'}, status=403)
+	profile, _ = CustomerProfile.objects.get_or_create(user=user)
+	return Response({'customer_id': user.pk, 'total_spent': profile.total_spent})
