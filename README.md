@@ -20,6 +20,16 @@ This project demonstrates a well-structured Django project for assessment purpos
 That's it! The project will be running in Docker containers.
 
 
+## Create a Superuser
+
+To create a Django superuser for admin access:
+
+```sh
+make shell
+cd ordermanager
+python manage.py createsuperuser
+```
+
 ## 🚀 Features
 
 - User authentication (JWT & session-based)
